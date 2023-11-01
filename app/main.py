@@ -1,6 +1,8 @@
 # swagger : http://127.0.0.1:8000/posts/docs
 # redoc : http://127.0.0.1:8000/redoc
 # uvicorn  app.main:app --reload
+# login == password == admin
+# port : 5432
 
 import uuid
 
