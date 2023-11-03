@@ -11,6 +11,7 @@ from fastapi import FastAPI, Response, status, HTTPException
 from pydantic import BaseModel
 from typing import Optional
 
+
 app = FastAPI()
 
 class Post(BaseModel):
