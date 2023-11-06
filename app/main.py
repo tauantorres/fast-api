@@ -11,8 +11,9 @@ from fastapi import FastAPI, Response, status, HTTPException
 from pydantic import BaseModel
 from typing import Optional
 
-
 app = FastAPI()
+
+
 
 class Post(BaseModel):
     id: Optional[str] = str(uuid.uuid4().hex)
