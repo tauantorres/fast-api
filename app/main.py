@@ -3,6 +3,7 @@
 # uvicorn  app.main:app --reload
 # login == password == admin
 # port : 5432
+
 #===================================================================
 # REGION : logging
 import logging
@@ -30,25 +31,14 @@ stream_handler.setFormatter(formatter)
 logger.addHandler(file_handler_error)
 logger.addHandler(stream_handler)
 logger.addHandler(file_handler)
-# ENDREGION logging
+# ENDREGION : logging
 #===================================================================
-import uuid
+
+
+#===================================================================
+# REGION : PostgreSQL
 import psycopg
 from psycopg.rows import dict_row 
-
-from fastapi import FastAPI, Response, status, HTTPException
-from fastapi.responses import JSONResponse
-
-from pydantic import BaseModel
-from typing import Optional
-
-app = FastAPI()
-
-class Post(BaseModel):
-    id: Optional[int] = uuid.uuid4().hex
-    title: str
-    content: str
-    published: bool = True
 
 try:
     connection = psycopg.connect(host="localhost",
@@ -62,20 +52,26 @@ except Exception as error:
     logger.error(f"Connection status: [\033[31mFAILED\033[0m]. Error: {error}")
     exit()
 
-posts = [
-    {
-        "id": "1",
-        "title" : "FIRST",
-        "content": "My first post",
-        "published": True,
-    },
-    {
-        "id": "2",
-        "title" : "SECOND",
-        "content": "My second post",
-        "published": True,
-    }
-]
+# ENDREGION : PostgreSQL
+#===================================================================
+
+#===================================================================
+# REGION : FastAPI
+import uuid
+
+from fastapi import FastAPI, status, HTTPException
+from fastapi.responses import JSONResponse
+
+from pydantic import BaseModel
+from typing import Optional
+
+app = FastAPI()
+
+class Post(BaseModel):
+    id: Optional[int] = uuid.uuid4().hex
+    title: str
+    content: str
+    published: bool = True
 
 # get-all-posts [DONE]
 @app.get("/posts")
@@ -100,7 +96,6 @@ def create_posts(post: Post):
             "post": new_post
             }
 
-
 # get-one-post [DONE]
 @app.get("/posts/{id}")
 def get_post(id: int):
@@ -113,7 +108,6 @@ def get_post(id: int):
         raise HTTPException(status_code = status.HTTP_404_NOT_FOUND, 
                             detail=f"Post with id [{id}] was not found.")
     return {"post": post}
-
 
 # delete-one-post [DONE]
 @app.delete("/posts/{id}", status_code=status.HTTP_204_NO_CONTENT)
@@ -129,12 +123,6 @@ def delete_post(id: int):
 
     return JSONResponse(status_code = status.HTTP_200_OK, 
                         content={"message": "Post deleted successfully."})
-
-def find_index_post(id: int):
-    for index, post in enumerate(posts):
-        if post["id"] == id:
-            return index
-    return None
 
 # update-one-post
 @app.put("/posts/{id}", status_code=status.HTTP_202_ACCEPTED)
@@ -152,3 +140,6 @@ def update_post(id: int, post: Post):
             "message": f"Post with id [{id}] updated successfully",
             "post": updated_post
         }
+
+# ENDREGION : PostgreSQL
+#===================================================================
