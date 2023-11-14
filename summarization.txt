@@ -1,0 +1,9 @@
+1. Reuniões de sexta-feira e o trauma da velocidade
+2. OCR ou GPT Vision [Vision](https://platform.openai.com/docs/guides/vision)
+    2.1. O preço não compensa. OCR : 0.0015 page. Vision [500px X 500 px] : 0.0025
+
+
+
+3. Documento com 10 paginas
+
+
